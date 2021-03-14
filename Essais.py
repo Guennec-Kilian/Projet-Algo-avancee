@@ -172,8 +172,75 @@ def essaissuccessifs_exe(M):
     return essaissuccessifs(0,X,somcour)
 
 
+def essaissuccessifsOPT_exe(M):
+    
+    euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
+    euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
+    somcour = 0
+    rk = 0
+    W = euroTab
+    X = [0,0,0,0,0,0,0,0]
+    XList = []
+    n=0
+    nmax=-1
+    #n défini le nombre de pièces utilisées pour arriver à la somme finale
+    def essaissuccessifsOPT(i,X,somcour,n):
+
+        #Verification que l'on ne soit pas arrivé au bout de W avant de continuer, si c'est le cas, alors on a X
+        if(i>=len(W)):
+            if(somcour==M):
+                #mmise à jour de nmax
+                if(nmax!=-1):
+                    if(n<nmax):
+                        nmax=n
+                else :
+                    nmax = n
+
+                sum = 0
+                for k in range(len(X)):
+                    sum+=X[k]
+
+                print("un i max a été atteint =",i," X=",X," somc=",somcour," p=",sum)
+                
+                return XList.append(X)
+            else:
+                return -1
+
+        xi = 0
+        rk = M-somcour
+        xi_flag = True
+        
+        while (xi*W[i]<=M and xi_flag) : #Si ce produit est plus grand que M alors il est impossible de trouver une solution
+            #Conditions d'élagage 1: On s'arrette de cherche quand la plus petite piece est supérieur à M-somcour (donc jamais atteinte quand le nb de piece de 1ct est illimité)
+            #Conditions d'élagage 2: On s'arrete de chercher quand somcour = M
+
+            #Calcul de la valeur potentielle xi*W[i] quee l'on ajouterait dans un X
+            pot = xi*W[i]
+            #On veut maintenant passer aux étapes suivantes :
+            #Une direction qui conserve ce coef xi pour l'indice i, et étudie i+1, et une autre qui regarde le xi+1
+
+
+            #Départ dans la première direction avec somcour et X mises à jour, on ajoute à n le nombre de pièces ajoutées
+            n+=xi
+
+            #On vérifie que cette valeur ajoutée à somcour ne dépasse pas M
+            if(somcour+pot<=M and n<=nmax) :
+                #On peut ajouter ce coef de piece d'index i au X courant
+                Y = X
+                Y[i]=xi
+                essaissuccessifs(i+1,Y,somcour+pot,n)
+                
+
+            else :
+                #Il ne sert à rien de continuer à faire croitre xi, et on veut sortir de la boucle
+                xi_flag = False
+
+            #Départ dans la deuxième direction
+            xi+=1
+
+    return essaissuccessifsOPT(0,X,somcour,n)
 
 
 if __name__ == "__main__":
 
-    essaissuccessifs_exe(400)
+    essaissuccessifsOPT_exe(400)
