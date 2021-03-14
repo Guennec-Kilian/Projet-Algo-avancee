@@ -101,23 +101,34 @@ def essaisSUCC_exe(M):
 
 #Cette fois la fonction renvoie toutes les possibilités possibles
 def essaissuccessifs_exe(M):
+    
+    euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
+    euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
     somcour = 0
     rk = 0
     W = euroTab
     X = [0,0,0,0,0,0,0,0]
     XList = [] 
-    #euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
-    #euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
     def essaissuccessifs(i,X,somcour):
 
         #Verification que l'on ne soit pas arrivé au bout de W avant de continuer, si c'est le cas, alors on a X
         if(i>=len(W)):
-            return X
-        
-        xi = 1
+            if(somcour==M):
+                sum = 0
+                for k in range(len(X)):
+                    sum+=X[k]
+
+                print("un i max a été atteint =",i," X=",X," somc=",somcour," p=",sum)
+                
+                return XList.append(X)
+            else:
+                return -1
+
+        xi = 0
         rk = M-somcour
+        xi_flag = True
         
-        while (xi*W[i]<=M) : #Si ce produit est plus grand que M alors il est impossible de trouver une solution
+        while (xi*W[i]<=M and xi_flag) : #Si ce produit est plus grand que M alors il est impossible de trouver une solution
             #Conditions d'élagage 1: On s'arrette de cherche quand la plus petite piece est supérieur à M-somcour (donc jamais atteinte quand le nb de piece de 1ct est illimité)
             #Conditions d'élagage 2: On s'arrete de chercher quand somcour = M
 
@@ -135,30 +146,34 @@ def essaissuccessifs_exe(M):
 
 
 
-                #Départ dans la première direction avec somcour mise à jour, on vérifie que l'on n'ait pas atteind la fin de la liste
-                if(i+2<=len(W) and (somcour+pot)!=M):
-                    
-                    essaissuccessifs(i+1,X,somcour+pot)
-                    
-                else:
-                    #Si on a atteint la fin de W ou alors que l'on a une solution (cond 2), on renvoie X
-                    return X
-                #Départ dans la deuxième direction avec somcour non mise à jour
-
+                #Départ dans la première direction avec somcour et X mises à jour
+                essaissuccessifs(i+1,Y,somcour+pot)
             
+            
+                
+
+            else :
+                #Il ne sert à rien de continuer à faire croitre xi, et on veut sortir de la boucle
+                xi_flag = False
+
+            #Départ dans la deuxième direction
             xi+=1
+
+        #On est sorti de la boucle avec la valeur xi max+1
+        #Cependant la valeur xi = 0 n'a pas été traitée, on peut le faire à cet endroit
+        #On part dans la premiere direction énoncée cette fois avec le X et somcour inchangés
+        #essaissuccessifs(i+1,X,somcour)
 
             
 
         
 
 
-    return essaisSUCC(0,X,somcour)
+    return essaissuccessifs(0,X,somcour)
 
 
 
 
 if __name__ == "__main__":
 
-    listCounter(glouton(4000))
-    essaisSUCC_exe(400)
+    essaissuccessifs_exe(400)
