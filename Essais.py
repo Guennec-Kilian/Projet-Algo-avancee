@@ -182,9 +182,9 @@ def essaissuccessifsOPT_exe(M):
     X = [0,0,0,0,0,0,0,0]
     XList = []
     n=0
-    nmax=-1
+    nmax = 1
     #n défini le nombre de pièces utilisées pour arriver à la somme finale
-    def essaissuccessifsOPT(i,X,somcour,n):
+    def essaissuccessifsOPT(i,X,somcour,n,nmax):
 
         #Verification que l'on ne soit pas arrivé au bout de W avant de continuer, si c'est le cas, alors on a X
         if(i>=len(W)):
@@ -192,7 +192,7 @@ def essaissuccessifsOPT_exe(M):
                 #mmise à jour de nmax
                 if(nmax!=-1):
                     if(n<nmax):
-                        nmax=n
+                        nmax = n
                 else :
                     nmax = n
 
@@ -228,7 +228,7 @@ def essaissuccessifsOPT_exe(M):
                 #On peut ajouter ce coef de piece d'index i au X courant
                 Y = X
                 Y[i]=xi
-                essaissuccessifs(i+1,Y,somcour+pot,n)
+                essaissuccessifsOPT(i+1,Y,somcour+pot,n,nmax)
                 
 
             else :
@@ -238,7 +238,7 @@ def essaissuccessifsOPT_exe(M):
             #Départ dans la deuxième direction
             xi+=1
 
-    return essaissuccessifsOPT(0,X,somcour,n)
+    return essaissuccessifsOPT(0,X,somcour,n,nmax)
 
 
 if __name__ == "__main__":
