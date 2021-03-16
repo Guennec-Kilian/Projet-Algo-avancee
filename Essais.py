@@ -182,28 +182,40 @@ def essaissuccessifsOPT_exe(M):
     X = [0,0,0,0,0,0,0,0]
     XList = []
     n=0
-    nmax = 1
+    global nmax
+    nmax = -1
     #n défini le nombre de pièces utilisées pour arriver à la somme finale
-    def essaissuccessifsOPT(i,X,somcour,n,nmax):
+    def essaissuccessifsOPT(i,X,somcour,n):
+        global nmax
 
         #Verification que l'on ne soit pas arrivé au bout de W avant de continuer, si c'est le cas, alors on a X
         if(i>=len(W)):
             if(somcour==M):
                 #mmise à jour de nmax
                 if(nmax!=-1):
-                    if(n<nmax):
+                    if(n<=nmax):
                         nmax = n
-                else :
+
+                        sum = 0
+                        for k in range(len(X)):
+                            sum+=X[k]
+
+                        print("un i max a été atteint =",i," X=",X," somc=",somcour," p=",sum)
+                        
+                        return XList.append(X)
+                else:
                     nmax = n
+                    sum = 0
+                    for k in range(len(X)):
+                        sum+=X[k]
 
-                sum = 0
-                for k in range(len(X)):
-                    sum+=X[k]
+                    print("un i max a été atteint =",i," X=",X," somc=",somcour," p=",sum)
+                    
+                    return XList.append(X)
 
-                print("un i max a été atteint =",i," X=",X," somc=",somcour," p=",sum)
                 
-                return XList.append(X)
             else:
+                print("-&")
                 return -1
 
         xi = 0
@@ -222,13 +234,15 @@ def essaissuccessifsOPT_exe(M):
 
             #Départ dans la première direction avec somcour et X mises à jour, on ajoute à n le nombre de pièces ajoutées
             n+=xi
+            print("boucle avec : i =",i,"xi =",xi," n=",n,"nmax =",n)
 
             #On vérifie que cette valeur ajoutée à somcour ne dépasse pas M
             if(somcour+pot<=M and n<=nmax) :
                 #On peut ajouter ce coef de piece d'index i au X courant
                 Y = X
                 Y[i]=xi
-                essaissuccessifsOPT(i+1,Y,somcour+pot,n,nmax)
+                print("boucle avec : i =",i,"xi =",xi," X =",X," scour+pot=",somcour+pot," n=",n,"nmax =",n)
+                essaissuccessifsOPT(i+1,Y,somcour+pot,n)
                 
 
             else :
@@ -238,9 +252,9 @@ def essaissuccessifsOPT_exe(M):
             #Départ dans la deuxième direction
             xi+=1
 
-    return essaissuccessifsOPT(0,X,somcour,n,nmax)
+    return essaissuccessifsOPT(0,X,somcour,n)
 
 
 if __name__ == "__main__":
 
-    essaissuccessifsOPT_exe(400)
+    print(essaissuccessifsOPT_exe(400))
