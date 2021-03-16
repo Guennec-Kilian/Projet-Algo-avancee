@@ -1,19 +1,23 @@
-euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
-euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
+import Arbre
+import constantes
+A = Arbre.Arbre
+euroLib = constantes.euroLib
+euroTab = constantes.euroTab
+
 
 def essaiSucc(a, N, solution):
     # a le noeud que l'on traite
     # N la valeur a atteindre
     for k in range (len(euroLib)):
         a.addFeuille(k)
-    
-    for x in a.feuilles:
-        if x.isEqual(N):
-            if len(solution) == 0 or len(solution) > x.getLenChemin():
-                solution = x.getSortedChemin()
-        elif x.isLower(N):
-            essaiSucc(x, N, solution)
-        
+    for i in range(len(a.feuilles)):
+        if a.feuilles[i].isEqual(N):
+            if len(solution) == 0 or len(solution) > a.feuilles[i].getLenChemin():
+                solution = a.feuilles[i].getSortedChemin()
+        elif a.feuilles[i].isLower(N) and (len(solution) == 0 or a.feuilles[i].getLenChemin() < len(solution)):
+            solution = essaiSucc(a.feuilles[i], N, solution)
+    print(solution)
+    return solution
 
 def glouton(aRendre):
     pieces =  []
@@ -175,7 +179,7 @@ def essaissuccessifs_exe(M):
 def essaissuccessifsOPT_exe(M):
     
     euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
-    euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
+    euroTab = [400, 300, 60, 25, 10, 5, 2, 1]
     somcour = 0
     rk = 0
     W = euroTab
@@ -191,7 +195,7 @@ def essaissuccessifsOPT_exe(M):
         #Verification que l'on ne soit pas arrivé au bout de W avant de continuer, si c'est le cas, alors on a X
         if(i>=len(W)):
             if(somcour==M):
-                #mmise à jour de nmax
+                # mise à jour de nmax
                 if(nmax!=-1):
                     if(n<=nmax):
                         nmax = n
@@ -257,4 +261,4 @@ def essaissuccessifsOPT_exe(M):
 
 if __name__ == "__main__":
 
-    print(essaissuccessifsOPT_exe(400))
+    sol = essaiSucc(A(0, [], -1), 1404,  [])

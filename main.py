@@ -1,9 +1,8 @@
 ﻿import Arbre
-
+import constantes
 A = Arbre.Arbre
-euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
-euroTab = [200, 100, 50, 20, 10, 5, 2, 1]
-
+euroLib = constantes.euroLib
+euroTab = constantes.euroTab
 
 def listCounter(listC):
     varList = [[],[]]
@@ -26,19 +25,31 @@ def listCounter(listC):
     for k in range (len(varList[0])) :
         print("La piece {0} apparait {1} fois".format(varList[0][k],varList[1][k]))
 
-def essaiSucc(a, N, solution):
+
+
+def essaiSucc(a, N, solution=[]):
     # a le noeud que l'on traite
     # N la valeur a atteindre
+
     for k in range (len(euroLib)):
-        a.addFeuille(k)
-    
-    for x in a.feuilles:
-        if x.isEqual(N):
-            if len(solution) == 0 or len(solution) > x.getLenChemin():
-                solution = x.getSortedChemin()
-        elif x.isLower(N):
-            essaiSucc(x, N, solution)
-        
+        a.addFeuille(k) # ajout des différentes pièces utilisables et sommation avec la somme precedente
+
+    for i in range(len(a.feuilles)):
+        # on test ensuite les nouvelles sommes pour savoir si on a réussite
+        if a.feuilles[i].isEqual(N):
+            # si on a réussite et qu'elle est meilleurs que la précédente, on change la solution
+            if len(solution) == 0 or len(solution) > a.feuilles[i].getLenChemin():
+                solution = a.feuilles[i].getSortedChemin()
+        # si on a une somme de valeur inferieur a ce qui doit etre rendu 
+        #   ET 
+        #       qu'aucune solution n'a été trouvée 
+        #           OU 
+        #       que le nombre de pièces nécessaires est inférieur au nombre de pièce de la solution
+        elif a.feuilles[i].isLower(N) and (len(solution) == 0 or a.feuilles[i].getLenChemin() < len(solution)):
+            # test la couche suivante de sommes dans l'arbre
+            solution = essaiSucc(a.feuilles[i], N, solution)
+
+    return solution
 
 def glouton(aRendre):
     pieces =  []
@@ -62,4 +73,4 @@ def glouton(aRendre):
 
 if __name__ == "__main__":
 
-    listCounter(glouton(4000))
+    listCounter(essaiSucc(A(0, [], -1), 1404))
