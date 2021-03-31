@@ -1,5 +1,8 @@
 ﻿import Arbre
 import constantes
+import time
+import matplotlib.pyplot as plt
+
 A = Arbre.Arbre
 euroLib = constantes.euroLib
 euroTab = constantes.euroTab
@@ -32,15 +35,20 @@ def essaiSucc(a, N, solution=[]):
     # N la valeur a atteindre
 
     for k in range (len(euroLib)):
-        a.addFeuille(k) # ajout des différentes pièces utilisables et sommation avec la somme precedente
+        if(a.valeur + euroTab[k] <= N):
+            a.addFeuille(k) # ajout des différentes pièces utilisables et sommation avec la somme precedente
 
-    for i in range(len(a.feuilles)):
+    i = 0
+    solFound = False
+    while i<len(a.feuilles) and not solFound:
+        
         # on test ensuite les nouvelles sommes pour savoir si on a réussite
         if a.feuilles[i].isEqual(N):
             # si on a réussite et qu'elle est meilleurs que la précédente, on change la solution
             if len(solution) == 0 or len(solution) > a.feuilles[i].getLenChemin():
                 solution = a.feuilles[i].getSortedChemin()
-        # si on a une somme de valeur inferieur a ce qui doit etre rendu 
+                solFound = True
+        # sinon si on a une somme de valeur inferieur a ce qui doit etre rendu 
         #   ET 
         #       qu'aucune solution n'a été trouvée 
         #           OU 
@@ -48,7 +56,7 @@ def essaiSucc(a, N, solution=[]):
         elif a.feuilles[i].isLower(N) and (len(solution) == 0 or a.feuilles[i].getLenChemin() < len(solution)):
             # test la couche suivante de sommes dans l'arbre
             solution = essaiSucc(a.feuilles[i], N, solution)
-
+        i+=1
     return solution
 
 def glouton(aRendre):
@@ -72,5 +80,6 @@ def glouton(aRendre):
     return pieces
 
 if __name__ == "__main__":
-
-    listCounter(essaiSucc(A(0, [], -1), 1404))
+    t = time.time()
+    sol = essaiSucc(A(0, [], -1), 1000)
+    print(time.time() - t)

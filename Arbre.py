@@ -52,6 +52,12 @@ class Arbre:
         else:
              return res + ">"
 
+    def valuesFeuilles(self):
+        values = []
+        for i in range(len(self.feuilles)):
+            values.append(self.feuilles[i].valeur)
+        return values
+        
 if __name__ == "__main__":
     a = Arbre(0, [], -1)
     for k in range (len(euroLib)):
