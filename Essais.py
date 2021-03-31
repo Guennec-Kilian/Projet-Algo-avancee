@@ -176,10 +176,9 @@ def essaissuccessifs_exe(M):
     return essaissuccessifs(0,X,somcour)
 
 
+nmax = -1
 def essaissuccessifsOPT_exe(M):
     
-    euroLib = ["c1", "c2", "c3", "c4", "c5", "c6", "c7", "c8"]
-    euroTab = [400, 300, 60, 25, 10, 5, 2, 1]
     somcour = 0
     rk = 0
     W = euroTab
@@ -261,4 +260,5 @@ def essaissuccessifsOPT_exe(M):
 
 if __name__ == "__main__":
 
-    sol = essaiSucc(A(0, [], -1), 1404,  [])
+    sol = essaiSucc(A(0, [], -1), 1404, [])
+    
