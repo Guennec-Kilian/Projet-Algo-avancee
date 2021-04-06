@@ -32,5 +32,4 @@ def dynamique1(euroLib, euroTab, v):
     
     dynamique1_(euroTab, v,res, 0)
 
-dynamique1(euroLib,euroTab, 489897)
-
+#dynamique1(euroLib,euroTab, 489897)

@@ -10,7 +10,7 @@ euroTab = constantes.euroTab
 def listCounter(listC):
     varList = [[],[]]
     #varList[0] contient les pieces cX
-    #varList[1] contient le nombre de fois que chaque vpiece apparait
+    #varList[1] contient le nombre de fois que chaque piece apparait
     for k in range (len(listC)):
         if (listC[k] not in varList[0]):
             varList[0].append(listC[k])
@@ -59,27 +59,56 @@ def essaiSucc(a, N, solution=[]):
         i+=1
     return solution
 
+
+def dynamique(aRendre):
+
+    pieces = [0]*len(euroTab)
+    res = []
+
+    pieces[-1] = aRendre//euroTab[-1]
+
+    l = 2
+    while l <= len(euroTab):
+        pieces[-l] = (pieces[-l+1]*euroTab[-l+1])//euroTab[-l]
+        pieces[-l+1] -= (pieces[-l]*euroTab[-l])//euroTab[-l+1]
+        aRendreTemp = 0
+        for i in range(len(euroTab)-l, len(euroTab)):
+            aRendreTemp += (pieces[i]*euroTab[i])
+        aRendreTemp -= aRendre
+        if aRendreTemp < 0:
+            aRendreTemp *= -1
+            for i in range(len(euroTab)-l+1, len(euroTab)):
+                temp = aRendreTemp//euroTab[i]
+                aRendreTemp -= temp*euroTab[i]
+                pieces[i] += temp
+        elif aRendreTemp > 0:
+            for i in range(len(euroTab)-l+1, len(euroTab)):
+                temp = aRendreTemp//euroTab[i]
+                aRendreTemp -= temp*euroTab[i]
+                pieces[i] -= temp
+
+        l += 1
+    
+    for i in range(len(euroLib)):
+        res += [euroLib[i]]*pieces[i]
+
+    return res
+
 def glouton(aRendre):
     pieces =  []
+    res = []
     troubleshout = 0
-    while aRendre != 0:
-        searching = True
-        i = 0
-        while searching and i < len(euroLib):
-            if aRendre >= euroTab[i]:
-                # si le reste à rendre est > a la valeur de la pièce
-                # (on suppose les pièces ordonnées par valeurs décroissantes)
-                pieces.append(euroLib[i])
-                searching = False
-                aRendre -= euroTab[i]
-            i += 1
-        troubleshout += 1
-        if troubleshout == 100000:
-            raise TimeoutError('nombre de recherche trop important')
+    for i in range(len(euroTab)):
+        pieces.append(aRendre // euroTab[i])
+        aRendre -= (pieces[i] * euroTab[i])
+        res += [euroLib[i]] * pieces[i] 
 
-    return pieces
+    return res
 
 if __name__ == "__main__":
-    t = time.time()
-    sol = essaiSucc(A(0, [], -1), 1000)
-    print(time.time() - t)
+    #print(glouton(191))
+    #t = time.time()
+    sol = essaiSucc(A(0, [], -1), 191)
+    #print(time.time() - t)
+    print(sol)
+    print(dynamique(191))
