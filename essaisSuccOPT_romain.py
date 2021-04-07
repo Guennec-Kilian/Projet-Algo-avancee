@@ -1,4 +1,5 @@
 import constantes
+import copy
 euroLib = constantes.euroLib
 euroTab = constantes.euroTab
 
@@ -90,12 +91,13 @@ def essaissuccessifsOPT_exe(M):
 
     return essaissuccessifsOPT(0, X, somcour, n)
 
-nmax = 90
+nmax = -1
+XList = []
+#euroTabOpt = euroTab.reverse()
 def essaissuccessifsOPT_exe2(M):
 
     sumc = 0
     X = [0, 0, 0, 0, 0, 0, 0, 0]
-    XList = []
     n = 0
     #n défini le nombre de pièces utilisées pour arriver à la somme finale
 
@@ -106,31 +108,31 @@ def essaissuccessifsOPT_exe2(M):
         
 
         #parcours de la liste euroTab par index :
-        if(sumc<M and i<len(euroTab)):
+        if(sumc<M and i>0):
             print("parcours en INDEX")
-            essaissuccessifsOPT(i+1,X,sumc,n)
+            essaissuccessifsOPT(i-1,X,sumc,n)
         else:
             #soit nous sommes arrivés à la valeur recherchée
             #soit nous sommes arrivés au bout de la liste euroTab
             #soit aucun des deux cas précédents : on peut continuer à incrémenter le nombre de piece d'indice i
             #il faut respectivement =1= mettre à jour nmax
-            if(sumc==M and (nmax>n or nmax==-1)):
+            if (sumc == M and (nmax > n or nmax == -1)):
                 nmax = n
                 print("mise à jour de nmax avec nmax=",nmax)
-                print("resultat trouvé : X=",X)
+                print("===================================== resultat trouvé : X=", X)
+                global XList
                 XList.append(X)
-            #ne rien faire
             else:
-                print("reached end of INDEX tree with i=",i,', X=',X,", sumc = ",sumc,", n =",n,", nmax =",nmax)
-            return -1
+                print("reached end of INDEX tree with i=",i,', X=',X,", sumc = ",sumc,", n =",n,", nmax =",nmax,"->")
 
         #=2= incrémenter le nombre de piece
-        print("reaching VALUE PRE incrementation part i =",i,', X=',X,", sumc = ",sumc,", n =",n,", nmax =",nmax)
-        Y=X
+
+        #print("reaching VALUE PRE incrementation part i =",i,', X=',X,", sumc = ",sumc,", n =",n,", nmax =",nmax)
+        Y=copy.deepcopy(X)
         Y[i]+=1
         sumc+=euroTab[i]
         n+=1
-        print("reaching VALUE POST incrementation part i =",i,', X=',Y,", sumc = ",sumc,", n =",n,", nmax =",nmax)
+        #print("reaching VALUE POST incrementation part i =",i,', X=',Y,", sumc = ",sumc,", n =",n,", nmax =",nmax)
         #avant de d'appeler récursivement la fonction, on vérifie les deux conditions suivantes
         if(sumc<M and (nmax>n or nmax==-1)):
             print("parcours en VALUE")
@@ -139,18 +141,18 @@ def essaissuccessifsOPT_exe2(M):
             #soit nous sommes arrivés à la valeur recherchée
             #soit nous sommes arrivés à n = nmax
             #soit les deux cas précédents sont réalisés : on peut ajouter X à la liste des solutions
-            if(sumc==M and (nmax>n or nmax==-1)):
+            if (sumc == M and (nmax > n or nmax == -1)):
+                nmax = n
                 print("mise à jour de nmax avec nmax=",nmax)
-                print("resultat trouvé : X=",Y)
+                print("!!!!!!!!!!!!!!!!!!! resultat trouvé : X=",Y)
                 XList.append(Y)
             else :
-                print("reached end of VALUE tree with i=",i,', X=',Y,", sumc = ",sumc,", n =",n,", nmax =",nmax)
-                return -1
+                print("reached end of VALUE tree with i=",i,', X=',Y,", sumc = ",sumc,", n =",n,", nmax =",nmax,"++")
 
-    essaissuccessifsOPT(0, X, sumc, n)
+    essaissuccessifsOPT(len(euroTab)-1, X, sumc, n)
     print("XLIST =",XList)
 
     
 
 
-essaissuccessifsOPT_exe2(2)
+essaissuccessifsOPT_exe2(9)
