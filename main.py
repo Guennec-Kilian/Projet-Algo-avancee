@@ -1,4 +1,5 @@
-﻿import Arbre
+﻿import random
+import Arbre
 import constantes
 import time
 import matplotlib.pyplot as plt
@@ -105,10 +106,74 @@ def glouton(aRendre):
 
     return res
 
+import math
 if __name__ == "__main__":
-    #print(glouton(191))
-    #t = time.time()
-    sol = essaiSucc(A(0, [], -1), 191)
-    #print(time.time() - t)
-    print(sol)
-    print(dynamique(191))
+
+    TempsCalcGlob = []
+    nb_test = 10
+    Nb_Valeurs = 100
+    Val_Max = 1000
+
+    Vals = []
+    for k in range(Nb_Valeurs):
+        bornem = math.floor((Val_Max/Nb_Valeurs))
+        Vals.append(random.randint(k*bornem,(k+1)*bornem))
+    print("Valeurs Test=", Vals)
+    
+    for k in range (nb_test) :
+        
+        TempsCalc = [[],[],[]]
+        
+        for testvalue in Vals :
+
+            t = time.time()
+            print(glouton(testvalue))
+            TempsCalc[0].append(time.time()-t)
+            t = time.time()
+            #sol = essaiSucc(A(0, [], -1), testvalue)
+            TempsCalc[1].append(time.time()-t)
+            #print(sol)
+            t = time.time()
+            print(dynamique(testvalue))
+            TempsCalc[2].append(time.time()-t)
+            t = time.time()
+        
+        TempsCalcGlob.append(TempsCalc)
+
+    TempsMoyens = [[0]*len(Vals),[0]*len(Vals),[0]*len(Vals)]
+    EcartType = [[0]*len(Vals), [0]*len(Vals), [0]*len(Vals)]
+    
+    for k in range(len(TempsCalcGlob)):
+        #Parcours des tests pour une liste aléatoire de quantité de monnaie à rendre donnée
+        for i in range(len(TempsCalcGlob[k])):
+            #Parcours des résultat de tests séparément
+            for p in range(len(TempsCalcGlob[k][i])):
+                #parcours du résultats d'un test en particulier pour une valeur à rendre en particulier, unitaire
+                TempsMoyens[i][p]+=TempsCalcGlob[k][i][p]
+
+    for k in range(len(TempsCalcGlob)):
+        #Parcours des tests pour une liste aléatoire de quantité de monnaie à rendre donnée
+        for i in range(len(TempsCalcGlob[k])):
+            #Parcours des résultat de tests séparément
+            for p in range(len(TempsCalcGlob[k][i])):
+                #parcours du résultats d'un test en particulier pour une valeur à rendre en particulier, unitaire
+                EcartType[i][p] = abs(TempsMoyens[i][p] - TempsCalcGlob[k][i][p])
+
+    #print("TempsMoyens pre moyennage=",TempsMoyens)
+
+    for k in range(len(TempsMoyens)):
+        for i in range(len(TempsMoyens[0])):
+            TempsMoyens[k][i] = TempsMoyens[k][i]/nb_test
+            
+    for k in range(len(TempsMoyens)):
+        for i in range(len(TempsMoyens[0])):
+            EcartType[k][i] = (EcartType[k][i]/nb_test)
+    
+    print("ecart type par valeur = ",EcartType)
+
+    #print("TempsMoyens final =",TempsMoyens)
+
+    for k in range(len(TempsMoyens)):
+        plt.plot(Vals, TempsMoyens[k])
+
+    plt.savefig("mygraph.png")
