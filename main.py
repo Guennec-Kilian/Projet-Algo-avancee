@@ -110,9 +110,9 @@ import math
 if __name__ == "__main__":
 
     TempsCalcGlob = []
-    nb_test = 10
-    Nb_Valeurs = 100
-    Val_Max = 1000
+    nb_test = 20
+    Nb_Valeurs = 500
+    Val_Max = 1000000
 
     Vals = []
     for k in range(Nb_Valeurs):
@@ -151,6 +151,14 @@ if __name__ == "__main__":
                 #parcours du résultats d'un test en particulier pour une valeur à rendre en particulier, unitaire
                 TempsMoyens[i][p]+=TempsCalcGlob[k][i][p]
 
+    #print("TempsMoyens pre moyennage=",TempsMoyens)
+
+    for k in range(len(TempsMoyens)):
+        for i in range(len(TempsMoyens[0])):
+            TempsMoyens[k][i] = TempsMoyens[k][i]/nb_test
+
+    #print("TempsMoyens final =",TempsMoyens)
+
     for k in range(len(TempsCalcGlob)):
         #Parcours des tests pour une liste aléatoire de quantité de monnaie à rendre donnée
         for i in range(len(TempsCalcGlob[k])):
@@ -158,22 +166,20 @@ if __name__ == "__main__":
             for p in range(len(TempsCalcGlob[k][i])):
                 #parcours du résultats d'un test en particulier pour une valeur à rendre en particulier, unitaire
                 EcartType[i][p] = abs(TempsMoyens[i][p] - TempsCalcGlob[k][i][p])
-
-    #print("TempsMoyens pre moyennage=",TempsMoyens)
-
-    for k in range(len(TempsMoyens)):
-        for i in range(len(TempsMoyens[0])):
-            TempsMoyens[k][i] = TempsMoyens[k][i]/nb_test
             
     for k in range(len(TempsMoyens)):
         for i in range(len(TempsMoyens[0])):
             EcartType[k][i] = (EcartType[k][i]/nb_test)
     
     print("ecart type par valeur = ",EcartType)
+    print("Valeurs Test=", Vals)
 
-    #print("TempsMoyens final =",TempsMoyens)
-
+    
+    fig, axs = plt.subplots(2)
+    fig.suptitle('Resultats test/temps || Resultats ecart-type/temps')
     for k in range(len(TempsMoyens)):
-        plt.plot(Vals, TempsMoyens[k])
+        axs[0].plot(Vals, TempsMoyens[k])
+    for k in range(len(TempsMoyens)):
+        axs[1].plot(Vals, EcartType[k])
 
-    plt.savefig("mygraph.png")
+    fig.savefig("mygraph.png")
