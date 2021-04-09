@@ -260,5 +260,5 @@ def essaissuccessifsOPT_exe(M):
 
 if __name__ == "__main__":
 
-    sol = essaiSucc(A(0, [], -1), 1404, [])
+    sol = essaiSucc(A(0, [], -1), 1025, [])
     
