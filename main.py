@@ -118,10 +118,8 @@ def essaissuccessifsOPT_exe2(M):
                 #print("reached end of VALUE tree with i=",i,', X=',Y,", sumc = ",sumc,", n =",n,", nmax =",nmax,"++")
 
     essaissuccessifsOPT(len(euroTab)-1, X, sumc, n)
-    #print("M=",M)
     global XList
     global nmax
-    #print("XLIST =", XList)
     nmax = -1
     XListRes = copy.deepcopy(XList)
     XList = []
@@ -178,10 +176,10 @@ if __name__ == "__main__":
 
     k = 0
     TempsCalcGlob = []
-    nb_test = 4 #Nombre de fois qu'un meme calcul sera effectué, pour palier au problemes des processus en arrière plan à impacte aléatoire sur les durées de calcul
-    Nb_Valeurs = 50 #Nombres de valeurs testées, entre 0 et la valeur max choisie
-    Val_Max = 300 #Valeur max choisie
-    flatfact = 0.3  # taille de l'intervalle sur lequel on calcul la moyenne pour lissage, 1 = lissage sur l'ensemble de la courbe
+    nb_test = 3 #Nombre de fois qu'un meme calcul sera effectué, pour palier au problemes des processus en arrière plan à impacte aléatoire sur les durées de calcul
+    Nb_Valeurs = 10 #Nombres de valeurs testées, entre 0 et la valeur max choisie
+    Val_Max = 2400 #Valeur max choisie
+    flatfact = 0.2  # taille de l'intervalle sur lequel on calcul la moyenne pour lissage, 1 = lissage sur l'ensemble de la courbe
 
     t_Int = int(max(math.floor(flatfact*Nb_Valeurs*0.5), 1))
 
@@ -203,13 +201,13 @@ if __name__ == "__main__":
 
             t = time.time()
             print(glouton(testvalue))
-            TempsCalc[0].append(time.time()-t)
+            TempsCalc[0].append((time.time()-t)*1000)
             t = time.time()
             print(essaissuccessifsOPT_exe2(testvalue))
             TempsCalc[1].append(time.time()-t)
             t = time.time()
             print(dynamique(testvalue))
-            TempsCalc[2].append(time.time()-t)
+            TempsCalc[2].append((time.time()-t))
             t = time.time()
         
         TempsCalcGlob.append(TempsCalc)
